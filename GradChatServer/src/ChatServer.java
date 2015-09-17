@@ -12,7 +12,6 @@ import java.util.Vector;
 
 public class ChatServer {
 	
-	//¼­¹ö¼ÒÄÏ - Å¬¶óÀÌ¾ğÆ®ÀÇ Á¢¼ÓÀ» ¹Ş¾ÆµéÀÌ´Â Å¬·¡½º
 	int port=50000;
 	ServerSocket server;
 	
@@ -22,64 +21,61 @@ public class ChatServer {
 		connectList = new Vector<ServerThread>();
 		
 		try {
-			//¼­¹ö°´Ã¼ »ı¼º
+
 			server = new ServerSocket(port);
-			System.out.println("server ½ÃÀÛ");
+			System.out.println("server start");
 			
 			while(true){
-				//Á¢¼ÓÀÚ°¡ Á¢¼ÓÇÏ´ÂÁö È®ÀÎ
-				//Á¢¼ÓÀÚ°¡ ÀÖÀ»¶§±îÁö ´ë±â,Áö¿¬»óÅÂ¿¡ ÀÖ´Ù.
-				System.out.println("server while ½ÃÀÛ");
+				System.out.println("server while start");
 				Socket client = server.accept();
 				System.out.println("server accept");
 				InetAddress inet = client.getInetAddress();
 				String ip = inet.getHostAddress();
-				System.out.println(ip+"-Á¢¼ÓÀÚ ¹ß°ß");
+				System.out.println(ip+"- client connect");
 				
-				//´ëÈ­¿ë ¾²·¹µå »ı¼º ¹× ¼ÒÄÏ
 				ServerThread serverThread = new ServerThread(connectList, client);
 				System.out.println("start");
 				serverThread.start();
 				
 				connectList.add(serverThread);
-				System.out.println("ÇöÀç Á¢¼ÓÀÚ¼ö:"+connectList.size());
+				System.out.println("client num : "+connectList.size());
 			}
 			
 			/*
-			//Å¬¶óÀÌ¾ğÆ®ÀÇ ¸Ş¼¼Áö¸¦ ¹Ş¾Æµé¿©º¸ÀÚ(ÀÔ·Â)
+			//Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¾Æµé¿©ï¿½ï¿½ï¿½ï¿½(ï¿½Ô·ï¿½)
 			InputStream is = client.getInputStream();
-			//ÇÑ±ÛÀÌ Áö¿øµÇÁö ¾ÊÀ¸¹Ç·Î 2¹ÙÀÌÆ®¾¿ Ã³¸®ÇÏ´Â ½ºÆ®¸²À¸·Î ¾÷±×·¹ÀÌµå
-			InputStreamReader reader;//¹®ÀÚ±â¹İ½ºÆ®¸²(2¹ÙÀÌÆ®¾¿ Ã³¸®)
+			//ï¿½Ñ±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ 2ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×·ï¿½ï¿½Ìµï¿½
+			InputStreamReader reader;//ï¿½ï¿½ï¿½Ú±ï¿½İ½ï¿½Æ®ï¿½ï¿½(2ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Ã³ï¿½ï¿½)
 			reader = new InputStreamReader(is);
 			
-			//¹®ÀÚ´ÜÀ§·Î µ¥ÀÌÅÍ¸¦ Ã³¸®ÇÏ¸é È¿À²»ó ¶³¾îÁö¹Ç·Î
-			//¹öÆÛ½ºÆ®¸²À¸·Î ¾÷±×·¹ÀÌµå
-			//¹öÆÛÃ³¸®µÈ ¹®ÀÚ±â¹İ ½ºÆ®¸²
+			//ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã³ï¿½ï¿½ï¿½Ï¸ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½
+			//ï¿½ï¿½ï¿½Û½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×·ï¿½ï¿½Ìµï¿½
+			//ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½
 			BufferedReader buffer = new BufferedReader(reader);
 			
-			//Å¬¶óÀÌ¾ğÆ®°¡ º¸³½ ¸Ş½ÃÁö¸¦ Ãâ·ÂÇØº¸ÀÚ(Ãâ·Â)
+			//Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ş½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½)
 			OutputStream os = client.getOutputStream();
-			//¹®ÀÚ±â¹İ Ãâ·Â½ºÆ®¸²
+			//ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ ï¿½ï¿½Â½ï¿½Æ®ï¿½ï¿½
 			OutputStreamWriter writer = new OutputStreamWriter(os);
-			//¹öÆÛÃ³¸®µÈ ¹®ÀÚ±â¹İ Ãâ·Â ½ºÆ®¸²
+			//ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½
 			BufferedWriter bufferWriter = new BufferedWriter(writer);
 			
 			//int data;
 			String data;
 			while(true){
-				//Å¬¶óÀÌ¾ğÆ®¿¡¼­ ¸Ş½ÃÁö¸¦ ¹Ş´Â´Ù.
+				//Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ş½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş´Â´ï¿½.
 				//data = is.read();
 				//data = reader.read();
 				data = buffer.readLine();
 				
 				//System.out.print((char)data);
 				System.out.println(data);
-				//Å¬¶óÀÌ¾ğÆ®¿¡°Ô ¸Ş½ÃÁö¸¦ º¸³½´Ù.
+				//Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ş½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 				//os.write((char)data);
 				//os.write(data);
 				bufferWriter.write(data+"\n");
-				//Ãâ·Â½ºÆ®¸²¾ÈÀÇ µ¥ÀÌÅÍ¸¦ ºñ¿ì´Â°ÍÀÌ´Ù.
-				//È¤½Ã¶óµµ ³²¾ÆÀÖÀ»¼ö ÀÖ´Â µ¥ÀÌÅÍ¸¦ ÀüºÎ ³»º¸³¿
+				//ï¿½ï¿½Â½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ï¿½Ì´ï¿½.
+				//È¤ï¿½Ã¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				//os.flush();
 				bufferWriter.flush();
 			}*/

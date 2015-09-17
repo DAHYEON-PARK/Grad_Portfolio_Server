@@ -42,7 +42,7 @@ public class ServerThread extends Thread{
 		}
 	}
 	
-	//메시지 청취
+	
 	public String listen(){
 		String msg="";
 		try {
@@ -54,7 +54,7 @@ public class ServerThread extends Thread{
 		return msg;
 	}
 	
-	//메시지 전송
+
 	public void send(String msg){
 		try {
 			for(int i=0;i<connectList.size();i++){
